@@ -22,11 +22,11 @@
 <br>
 
 <table>
-<tr><th>ぶい</th><th>そうび</th><th>こうか</th></tr>
-<tr><td align="center">🗡️ ぶき</td><td>VS Code</td><td>こうげきりょく +30</td></tr>
-<tr><td align="center">🛡️ たて</td><td>Git</td><td>セーブポイントを つくれる</td></tr>
-<tr><td align="center">🪖 あたま</td><td>ヘッドホン</td><td>しゅうちゅうりょく +50</td></tr>
-<tr><td align="center">💍 アクセ</td><td>コーヒー</td><td>MP が かいふくする（ねむれなくなる）</td></tr>
+<tr><th>ぶい</th><th>そうび</th></tr>
+<tr><td align="center">言語</td><td>python, JavaScript, TypeScript, C言語</td></tr>
+<tr><td align="center"> フレームワーク</td><td>Django, Next.js, React</td></tr>
+<tr><td align="center">インフラ</td><td>DB browser, Docker</td></tr>
+<tr><td align="center">ツール</td><td>GitHub</td></tr>
 </table>
 
 <br>

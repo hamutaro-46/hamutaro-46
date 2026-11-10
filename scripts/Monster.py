@@ -104,7 +104,11 @@ def pick_monster(today: date) -> tuple[dict, int, int]:
     hp = lv * rng.randint(8, 12) + rng.randint(0, 9)
     return monster, lv, hp
  
- 
+def hp_bar(now: int, max_hp: int, width: int = 10) -> str:
+    """HP を █ と ░ の バーに する（例: ██████░░░░）"""
+    filled = round(width * now / max_hp)
+    return "█" * filled + "░" * (width - filled)
+
 def render(today: date) -> str:
     monster, lv, hp = pick_monster(today)
     # セリフ（"lines"）が ある モンスターだけ セリフを 表示する
@@ -123,6 +127,7 @@ def render(today: date) -> str:
         f'<h1>{monster["icon"]}</h1>\n'
         f'<p><b>やせいの {monster["name"]}（Lv.{lv}）が あらわれた！</b><br>\n'
         f'<sub>レア度 {RARITY_LABEL[monster["rarity"]]}</sub></p>\n'
+        f'<p><code>HP {hp_bar(hp, hp)} {hp}/{hp}</code></p>\n'
         '<table>\n'
         '<tr><th>HP</th><th>ぞくせい</th></tr>\n'
         f'<tr><td align="center">{hp}</td><td align="center">{monster["type"]}</td></tr>\n'

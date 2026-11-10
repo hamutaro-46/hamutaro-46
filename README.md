@@ -5,6 +5,7 @@
 <h1>🟢</h1>
 <p><b>やせいの バグスライム（Lv.1）が あらわれた！</b><br>
 <sub>レア度 ★</sub></p>
+<p><code>HP ██████████ 16/16</code></p>
 <table>
 <tr><th>HP</th><th>ぞくせい</th></tr>
 <tr><td align="center">16</td><td align="center">みず</td></tr>

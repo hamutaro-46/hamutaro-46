@@ -25,6 +25,7 @@ END = "<!-- MONSTER:END -->"
 WEEKDAYS = "月火水木金土日"
  
 # rarity: 1=よくでる 2=ときどき 3=レア
+# セリフを 出したいときは "lines": ["セリフ1", "セリフ2"] を 足す
 MONSTERS = [
     {
         "name": "バグスライム", "icon": "🟢", "rarity": 1, "lv": (1, 10),
@@ -106,32 +107,32 @@ def pick_monster(today: date) -> tuple[dict, int, int]:
  
 def render(today: date) -> str:
     monster, lv, hp = pick_monster(today)
-    rng = random.Random(today.isoformat() + "line")
-    line = rng.choice(monster["lines"])
+    # セリフ（"lines"）が ある モンスターだけ セリフを 表示する
+    speech = ""
+    if monster.get("lines"):
+        rng = random.Random(today.isoformat() + "line")
+        line = rng.choice(monster["lines"])
+        speech = f'<p>💬 <i>{monster["name"]}「{line}」</i></p>\n'
     heading = monster.get("title", "⚔️ きょうの てき")
     day = f"{today.year}/{today.month}/{today.day}（{WEEKDAYS[today.weekday()]}）"
  
-    return f"""<div align="center">
+    return (
+        '<div align="center">\n'
+        f'<h3>{heading}</h3>\n'
+        f'<sub>{day}</sub>\n'
+        f'<h1>{monster["icon"]}</h1>\n'
+        f'<p><b>やせいの {monster["name"]}（Lv.{lv}）が あらわれた！</b><br>\n'
+        f'<sub>レア度 {RARITY_LABEL[monster["rarity"]]}</sub></p>\n'
+        '<table>\n'
+        '<tr><th>HP</th><th>ぞくせい</th></tr>\n'
+        f'<tr><td align="center">{hp}</td><td align="center">{monster["type"]}</td></tr>\n'
+        '</table>\n'
+        f'{speech}'
+        '</div>'
+    )
  
-### {heading}
- 
-<sub>{day}</sub>
- 
-# {monster["icon"]}
- 
-**やせいの {monster["name"]}（Lv.{lv}）が あらわれた！**
- 
-<sub>レアど {RARITY_LABEL[monster["rarity"]]}</sub>
- 
-| HP | ぞくせい |
-|:---:|:---:|
-| {hp} | {monster["type"]}
- 
-> {monster["name"]}「{line}」
- 
-</div>"""
- 
- 
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--date", help="YYYY-MM-DD（ためしに 別の日を 見るとき）")

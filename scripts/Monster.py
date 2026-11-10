@@ -28,78 +28,61 @@ WEEKDAYS = "月火水木金土日"
 MONSTERS = [
     {
         "name": "バグスライム", "icon": "🟢", "rarity": 1, "lv": (1, 10),
-        "type": "みず", "weak": "テストコード", "drop": "セミコロン",
+        "type": "みず",
     },
     {
         "name": "タイポ・バット", "icon": "🦇", "rarity": 1, "lv": (1, 8),
-        "type": "かぜ", "weak": "みなおし", "drop": "ただしい スペル",
+        "type": "かぜ",
     },
     {
         "name": "セミコロン・スパイダー", "icon": "🕷️", "rarity": 1, "lv": (3, 12),
-        "type": "やみ", "weak": "フォーマッター", "drop": "；",
+        "type": "やみ",
     },
     {
         "name": "コーヒーぎれ・ゴブリン", "icon": "☕", "rarity": 1, "lv": (2, 9),
-        "type": "ねむけ", "weak": "コンビニ", "drop": "コーヒーまめ",
+        "type": "ねむけ",
     },
     {
         "name": "ヌルポ・ゴースト", "icon": "👻", "rarity": 2, "lv": (8, 20),
-        "type": "むう", "weak": "nullチェック", "drop": "からっぽの さんしょう",
+        "type": "むう",
     },
     {
         "name": "むげんループ・スネーク", "icon": "🐍", "rarity": 2, "lv": (10, 22),
-        "type": "じかん", "weak": "break", "drop": "とまらない とけい",
+        "type": "じかん",
     },
     {
         "name": "メモリリーク・ゾンビ", "icon": "🧟", "rarity": 2, "lv": (12, 25),
-        "type": "どく", "weak": "close()", "drop": "かいほうされない メモリ",
+        "type": "どく",
     },
     {
         "name": "404・ミミック", "icon": "📦", "rarity": 2, "lv": (6, 18),
-        "type": "まいご", "weak": "ただしい URL", "drop": "Not Found",
+        "type": "まいご",
     },
     {
         "name": "かんきょうへんすう・ニンジャ", "icon": "🥷", "rarity": 2, "lv": (10, 24),
-        "type": "かくれ", "weak": ".env.example", "drop": "ひみつの キー",
+        "type": "かくれ",
     },
     {
         "name": "CORS・ウィザード", "icon": "🧙", "rarity": 2, "lv": (14, 28),
-        "type": "けっかい", "weak": "ヘッダーの せってい", "drop": "Access-Control-Allow-Origin",
+        "type": "けっかい",
     },
     {
         "name": "いぞんじごく・ゴーレム", "icon": "🗿", "rarity": 3, "lv": (25, 40),
-        "type": "いわ", "weak": "lockファイル", "drop": "node_modules（1.2GB）",
+        "type": "いわ",
     },
     {
         "name": "レガシーコード・リッチ", "icon": "💀", "rarity": 3, "lv": (30, 45),
-        "type": "のろい", "weak": "リファクタリング", "drop": "10ねんまえの コメント",
+        "type": "のろい",
     },
     {
         "name": "マージコンフリクト・ドラゴン", "icon": "🐉", "rarity": 3, "lv": (35, 50),
-        "type": "ほのお", "weak": "こまめな pull", "drop": "<<<<<<< HEAD",
+        "type": "ほのお",
     },
 ]
  
-# 曜日 ボス（0=月 … 6=日）
-WEEKDAY_BOSSES = {
-    0: {
-        "name": "ゲツヨウビ・オーガ", "icon": "👹", "rarity": 4, "lv": (40, 60),
-        "type": "ゆううつ", "weak": "やすみの おもいで", "drop": "1しゅうかんの はじまり",
-        "lines": ["しゅうまつは もう おわったぞ…", "やる気を 50% うばった！"],
-        "title": "📅 げつようび の ボス",
-    },
-    4: {
-        "name": "ほんばんデプロイ・フェニックス", "icon": "🔥", "rarity": 4, "lv": (45, 65),
-        "type": "ほのお", "weak": "げつようびまで まつ", "drop": "ロールバック",
-        "lines": ["きんようびの ゆうがたに デプロイ… するのか？", "なんどでも よみがえる バグを よびだした！"],
-        "title": "📅 きんようび の ボス",
-    },
-}
- 
 GOLDEN = {
     "name": "きんいろ バグスライム", "icon": "✨", "rarity": 5, "lv": (99, 99),
-    "type": "ひかり", "weak": "なし", "drop": "しあわせの コミット",
-    "lines": ["みたひとは きょう いいことが あるかも！", "すぐに にげだしそうだ…！"],
+    "type": "ひかり", "weak": "なし",
     "title": "🌟 めったに あえない てき",
 }
  
@@ -112,8 +95,6 @@ def pick_monster(today: date) -> tuple[dict, int, int]:
  
     if rng.random() < 0.03:
         monster = GOLDEN
-    elif today.weekday() in WEEKDAY_BOSSES and rng.random() < 0.6:
-        monster = WEEKDAY_BOSSES[today.weekday()]
     else:
         weights = [RARITY_WEIGHT[m["rarity"]] for m in MONSTERS]
         monster = rng.choices(MONSTERS, weights=weights, k=1)[0]
@@ -142,9 +123,9 @@ def render(today: date) -> str:
  
 <sub>レアど {RARITY_LABEL[monster["rarity"]]}</sub>
  
-| HP | ぞくせい | じゃくてん | おとすもの |
-|:---:|:---:|:---:|:---:|
-| {hp} | {monster["type"]} | {monster["weak"]} | {monster["drop"]} |
+| HP | ぞくせい |
+|:---:|:---:|
+| {hp} | {monster["type"]}
  
 > {monster["name"]}「{line}」
  

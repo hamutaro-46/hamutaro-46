@@ -22,7 +22,6 @@
 
 ## ⚔️ たたかう
 
-<details>
 <summary><b>そうび を かくにんする 🛡️</b></summary>
 <br>
 
@@ -33,8 +32,6 @@
 <tr><td align="center">🪖 あたま</td><td>ヘッドホン</td><td>しゅうちゅうりょく +50</td></tr>
 <tr><td align="center">💍 アクセ</td><td>コーヒー</td><td>MP が かいふくする（ねむれなくなる）</td></tr>
 </table>
-
-</details>
 
 <br>
 

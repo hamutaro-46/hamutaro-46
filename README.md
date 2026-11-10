@@ -18,10 +18,6 @@
 
 </div>
 
-<a name="fight"></a>
-
-## ⚔️ たたかう
-
 <summary><b>そうび を かくにんする 🛡️</b></summary>
 <br>
 

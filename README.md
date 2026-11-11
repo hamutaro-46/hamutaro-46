@@ -1,13 +1,14 @@
 <!-- MONSTER:START -->
 <div align="center">
 <h3>⚔️ きょうの てき</h3>
-<sub>2026/11/10（火）</sub>
-<h1>🟢</h1>
-<p><b>やせいの バグスライム（Lv.1）が あらわれた！</b><br>
-<sub>レア度 ★</sub></p>
+<sub>2026/11/11（水）</sub>
+<h1>🧟</h1>
+<p><b>やせいの メモリリーク・ゾンビ（Lv.17）が あらわれた！</b><br>
+<sub>レア度 ★★</sub></p>
+<p><code>HP ██████████ 137/137</code></p>
 <table>
 <tr><th>HP</th><th>ぞくせい</th></tr>
-<tr><td align="center">16</td><td align="center">みず</td></tr>
+<tr><td align="center">137</td><td align="center">どく</td></tr>
 </table>
 </div>
 <!-- MONSTER:END -->

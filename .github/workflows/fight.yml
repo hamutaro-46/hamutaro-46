@@ -1,0 +1,69 @@
+Claude
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Fight · YML
+name: fight
+ 
+on:
+  issues:
+    types: [opened]
+ 
+permissions:
+  contents: write
+  issues: write
+ 
+concurrency:
+  group: readme-update
+  cancel-in-progress: false
+ 
+jobs:
+  fight:
+    if: startsWith(github.event.issue.title, 'fight')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+ 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+ 
+      - name: こうげき
+        env:
+          PLAYER: ${{ github.event.issue.user.login }}
+        run: python scripts/monster.py --fight "$PLAYER"
+ 
+      - name: README を コミット
+        env:
+          PLAYER: ${{ github.event.issue.user.login }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md state.json
+          git diff --cached --quiet && exit 0
+          git commit -m "⚔️ $PLAYER attacked"
+          git pull --rebase origin main
+          git push origin main
+ 
+      - name: Issue を とじる
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh issue close "$NUMBER" --repo "$GITHUB_REPOSITORY" \
+            --comment "⚔️ Attack landed! Check the profile to see the enemy's HP: https://github.com/$GITHUB_REPOSITORY_OWNER"
+ 
+Claude が応答を完了しました

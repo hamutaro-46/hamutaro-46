@@ -127,7 +127,7 @@ def spawn(today: date) -> dict:
         "log": "",
     }
  
- def fight(state: dict, player: str) -> None:
+def fight(state: dict, player: str) -> None:
     """Deal damage to the enemy. About 5-10 hits to defeat it."""
     if state["hp"] <= 0:
         return  # already defeated: keep "defeated by ..." message

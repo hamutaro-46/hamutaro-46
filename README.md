@@ -5,13 +5,13 @@
 <h1>🧟</h1>
 <p><b>A wild Memory Leak Zombie (Lv.12) appeared!</b><br>
 <sub>Rarity ★★</sub></p>
-<p><code>HP ████████░░ 115/138</code></p>
+<p><code>HP ███████░░░ 101/138</code></p>
 <table>
 <tr><th>Max HP</th><th>Type</th></tr>
 <tr><td align="center">138</td><td align="center">Poison</td></tr>
 </table>
 <p><a href="https://github.com/hamutaro-46/hamutaro-46/issues/new?title=fight&body=Press+the+green+button+to+attack%21"><b>▶ FIGHT</b></a></p>
-<p><sub>hamutaro-46 dealt 23 damage!</sub></p>
+<p><sub>hamutaro-46 dealt 14 damage!</sub></p>
 </div>
 <!-- MONSTER:END -->
 

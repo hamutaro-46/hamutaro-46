@@ -21,13 +21,3 @@
 <sub>Thanks for playing! 🎮</sub>
 
 </div>
-
-<summary><b>skill set</b></summary>
-
-<table>
-<tr><th>Slot</th><th>Equipment</th></tr>
-<tr><td align="center">Languages</td><td>Python, JavaScript, TypeScript, C</td></tr>
-<tr><td align="center">Frameworks</td><td>Django, Next.js, React</td></tr>
-<tr><td align="center">Infrastructure</td><td>DB Browser, Docker</td></tr>
-<tr><td align="center">Tools</td><td>GitHub</td></tr>
-</table>

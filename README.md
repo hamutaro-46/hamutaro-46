@@ -1,14 +1,14 @@
 <!-- MONSTER:START -->
 <div align="center">
 <h3>⚔️ きょうの てき</h3>
-<sub>2026/11/11（水）</sub>
+<sub>2026/11/12（木）</sub>
 <h1>🧟</h1>
-<p><b>やせいの メモリリーク・ゾンビ（Lv.17）が あらわれた！</b><br>
+<p><b>やせいの メモリリーク・ゾンビ（Lv.12）が あらわれた！</b><br>
 <sub>レア度 ★★</sub></p>
-<p><code>HP ██████████ 137/137</code></p>
+<p><code>HP ██████████ 138/138</code></p>
 <table>
 <tr><th>HP</th><th>ぞくせい</th></tr>
-<tr><td align="center">137</td><td align="center">どく</td></tr>
+<tr><td align="center">138</td><td align="center">どく</td></tr>
 </table>
 </div>
 <!-- MONSTER:END -->

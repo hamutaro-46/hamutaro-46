@@ -6,20 +6,28 @@
  
 import argparse
 import random
+import json
 import re
 import sys
 from datetime import date, datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
  
-README = Path(__file__).resolve().parent.parent / "README.md"
+ROOT = Path(__file__).resolve().parent.parent
+README = ROOT / "README.md"
+STATE = ROOT / "state.json"
 START = "<!-- MONSTER:START -->"
 END = "<!-- MONSTER:END -->"
  
+REPO = "hamutaro-46/hamutaro-46"
+FIGHT_URL = (
+    f"https://github.com/{REPO}/issues/new"
+    "?title=fight&body=Press+the+green+button+to+attack%21"
+)
+
 WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
  
 # rarity: 1=よくでる 2=ときどき 3=レア
-# セリフを 出したいときは "lines": ["セリフ1", "セリフ2"] を 足す
 MONSTERS = [
     {
         "name": "Bug Slime", "icon": "🟢", "rarity": 1, "lv": (1, 10),
@@ -97,45 +105,101 @@ def pick_monster(today: date) -> tuple[dict, int, int]:
     lv = rng.randint(*monster["lv"])
     hp = lv * rng.randint(8, 12) + rng.randint(0, 9)
     return monster, lv, hp
- 
-def hp_bar(now: int, max_hp: int, width: int = 10) -> str:
-    """HP を █ と ░ の バーに する（例: ██████░░░░）"""
-    filled = round(width * now / max_hp)
-    return "█" * filled + "░" * (width - filled)
 
-def render(today: date) -> str:
+def spawn(today: date) -> dict:
+    """Create today's enemy at full HP."""
     monster, lv, hp = pick_monster(today)
-    # セリフ（"lines"）が ある モンスターだけ セリフを 表示する
     speech = ""
     if monster.get("lines"):
         rng = random.Random(today.isoformat() + "line")
-        line = rng.choice(monster["lines"])
-        speech = f'<p>💬 <i>{monster["name"]}「{line}」</i></p>\n'
-    heading = monster.get("title", "⚔️ きょうの てき")
-    day = f"{today.year}/{today.month}/{today.day}（{WEEKDAYS[today.weekday()]}）"
+        speech = rng.choice(monster["lines"])
+    return {
+        "date": today.isoformat(),
+        "name": monster["name"],
+        "icon": monster["icon"],
+        "rarity": monster["rarity"],
+        "type": monster["type"],
+        "title": monster.get("title", ""),
+        "speech": speech,
+        "lv": lv,
+        "hp": hp,
+        "max_hp": hp,
+        "log": "",
+    }
  
+ def fight(state: dict, player: str) -> None:
+    """Deal damage to the enemy. About 5-10 hits to defeat it."""
+    if state["hp"] <= 0:
+        return  # already defeated: keep "defeated by ..." message
+ 
+    low = max(1, state["max_hp"] // 10)
+    high = max(low, state["max_hp"] // 5)
+    dmg = random.randint(low, high)
+    critical = random.random() < 0.1
+    if critical:
+        dmg *= 2
+ 
+    state["hp"] = max(0, state["hp"] - dmg)
+    msg = f"{player} dealt {dmg} damage!"
+    if critical:
+        msg = "💥 Critical hit! " + msg
+    if state["hp"] == 0:
+        msg += f" {state['name']} was defeated by {player}!"
+    state["log"] = msg
+
+
+def hp_bar(now: int, max_hp: int, width: int = 10) -> str:
+    """Turn HP into a bar of █ and ░ (e.g. ██████░░░░)."""
+    filled = round(width * now / max_hp)
+    if now > 0:
+        filled = max(1, filled)  # keep at least 1 block while alive
+    return "█" * filled + "░" * (width - filled)
+
+def render(state: dict) -> str:
+    d = date.fromisoformat(state["date"])
+    heading = state.get("title") or "⚔️ Today's Enemy"
+    day = f"{d.year}/{d.month}/{d.day} ({WEEKDAYS[d.weekday()]})"
+    alive = state["hp"] > 0
+ 
+    if alive:
+        headline = f'A wild {state["name"]} (Lv.{state["lv"]}) appeared!'
+        action = f'<p><a href="{FIGHT_URL}"><b>▶ FIGHT</b></a></p>\n'
+    else:
+        headline = f'{state["name"]} was defeated! 🎉'
+        action = "<p><sub>A new enemy appears tomorrow at 6:00 (JST).</sub></p>\n"
+ 
+    speech = ""
+    if alive and state.get("speech"):
+        speech = f'<p>💬 <i>{state["name"]}: "{state["speech"]}"</i></p>\n'
+ 
+    log = f'<p><sub>{state["log"]}</sub></p>\n' if state.get("log") else ""
+
     return (
         '<div align="center">\n'
-        f'<h3>{heading}</h3>\n'
-        f'<sub>{day}</sub>\n'
-        f'<h1>{monster["icon"]}</h1>\n'
-        f'<p><b>やせいの {monster["name"]}（Lv.{lv}）が あらわれた！</b><br>\n'
-        f'<sub>レア度 {RARITY_LABEL[monster["rarity"]]}</sub></p>\n'
-        f'<p><code>HP {hp_bar(hp, hp)} {hp}/{hp}</code></p>\n'
-        '<table>\n'
-        '<tr><th>HP</th><th>ぞくせい</th></tr>\n'
-        f'<tr><td align="center">{hp}</td><td align="center">{monster["type"]}</td></tr>\n'
-        '</table>\n'
-        f'{speech}'
-        '</div>'
+        f"<h3>{heading}</h3>\n"
+        f"<sub>{day}</sub>\n"
+        f'<h1>{state["icon"]}</h1>\n'
+        f"<p><b>{headline}</b><br>\n"
+        f'<sub>Rarity {RARITY_LABEL[state["rarity"]]}</sub></p>\n'
+        f'<p><code>HP {hp_bar(state["hp"], state["max_hp"])} '
+        f'{state["hp"]}/{state["max_hp"]}</code></p>\n'
+        "<table>\n"
+        "<tr><th>Max HP</th><th>Type</th></tr>\n"
+        f'<tr><td align="center">{state["max_hp"]}</td>'
+        f'<td align="center">{state["type"]}</td></tr>\n'
+        "</table>\n"
+        f"{speech}"
+        f"{action}"
+        f"{log}"
+        "</div>"
     )
- 
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--date", help="YYYY-MM-DD（ためしに 別の日を 見るとき）")
-    parser.add_argument("--print", action="store_true", help="README を かえずに 表示だけする")
+    parser.add_argument("--date", help="YYYY-MM-DD (to preview another day)")
+    parser.add_argument("--print", action="store_true", help="only print, don't change files")
+    parser.add_argument("--fight", metavar="PLAYER", help="attack the current enemy")
     args = parser.parse_args()
  
     today = (
@@ -143,7 +207,17 @@ def main() -> None:
         if args.date
         else datetime.now(ZoneInfo("Asia/Tokyo")).date()
     )
-    block = render(today)
+ 
+    if args.fight:
+        if STATE.exists():
+            state = json.loads(STATE.read_text(encoding="utf-8"))
+        else:
+            state = spawn(today)
+        fight(state, args.fight)
+    else:
+        state = spawn(today)
+ 
+    block = render(state)
  
     if args.print:
         print(block)
@@ -152,11 +226,16 @@ def main() -> None:
     text = README.read_text(encoding="utf-8")
     pattern = re.compile(re.escape(START) + r".*?" + re.escape(END), re.DOTALL)
     if not pattern.search(text):
-        sys.exit(f"README.md に {START} と {END} が みつかりません")
+        sys.exit(f"{START} and {END} were not found in README.md")
  
     new_text = pattern.sub(lambda _: f"{START}\n{block}\n{END}", text)
     README.write_text(new_text, encoding="utf-8")
-    print(f"{today}: README を こうしんしました")
+    STATE.write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+ 
+    if args.fight:
+        print(f"{args.fight}: {state['log']}")
+    else:
+        print(f"{today}: README updated")
  
  
 if __name__ == "__main__":

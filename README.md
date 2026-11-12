@@ -17,12 +17,6 @@
 
 <div align="center">
 
-**[▶ fight](#fight)**
-
-</div>
-
-<div align="center">
-
 <sub>Thanks for playing! 🎮</sub>
 
 </div>

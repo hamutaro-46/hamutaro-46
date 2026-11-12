@@ -1,21 +1,3 @@
-Claude
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Fight · YML
 name: fight
  
 on:
@@ -65,5 +47,3 @@ jobs:
         run: |
           gh issue close "$NUMBER" --repo "$GITHUB_REPOSITORY" \
             --comment "⚔️ Attack landed! Check the profile to see the enemy's HP: https://github.com/$GITHUB_REPOSITORY_OWNER"
- 
-Claude が応答を完了しました

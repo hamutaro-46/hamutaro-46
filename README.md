@@ -1,15 +1,16 @@
 <!-- MONSTER:START -->
 <div align="center">
 <h3>⚔️ Today's Enemy</h3>
-<sub>2026/11/10 (Tue)</sub>
-<h1>🟢</h1>
-<p><b>A wild Bug Slime (Lv.1) appeared!</b><br>
-<sub>Rarity ★</sub></p>
-<p><code>HP ██████████ 16/16</code></p>
+<sub>2026/11/12 (Thu)</sub>
+<h1>🧟</h1>
+<p><b>A wild Memory Leak Zombie (Lv.12) appeared!</b><br>
+<sub>Rarity ★★</sub></p>
+<p><code>HP ██████████ 138/138</code></p>
 <table>
-<tr><th>HP</th><th>Type</th></tr>
-<tr><td align="center">16</td><td align="center">Water</td></tr>
+<tr><th>Max HP</th><th>Type</th></tr>
+<tr><td align="center">138</td><td align="center">Poison</td></tr>
 </table>
+<p><a href="https://github.com/hamutaro-46/hamutaro-46/issues/new?title=fight&body=Press+the+green+button+to+attack%21"><b>▶ FIGHT</b></a></p>
 </div>
 <!-- MONSTER:END -->
 

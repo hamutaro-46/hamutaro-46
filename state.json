@@ -1,0 +1,13 @@
+{
+  "date": "2026-11-12",
+  "name": "Memory Leak Zombie",
+  "icon": "🧟",
+  "rarity": 2,
+  "type": "Poison",
+  "title": "",
+  "speech": "",
+  "lv": 12,
+  "hp": 138,
+  "max_hp": 138,
+  "log": ""
+}

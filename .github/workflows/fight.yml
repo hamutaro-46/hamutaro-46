@@ -34,11 +34,16 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add README.md state.json
-          git diff --cached --quiet && exit 0
-          git commit -m "⚔️ $PLAYER attacked"
-          git pull --rebase origin main
-          git push origin main
+          for i in 1 2 3 4 5; do
+            git fetch origin main && git reset --hard origin/main
+            python scripts/monster.py --fight "$PLAYER"
+            git add README.md state.json
+            git diff --cached --quiet && exit 0
+            git commit -m "⚔️ $PLAYER attacked"
+            git push origin main && exit 0
+            sleep $((RANDOM % 5 + 1))
+          done
+          exit 1
  
       - name: Issue を とじる
         env:

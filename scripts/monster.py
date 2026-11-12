@@ -163,7 +163,11 @@ def render(state: dict) -> str:
  
     if alive:
         headline = f'A wild {state["name"]} (Lv.{state["lv"]}) appeared!'
-        action = f'<p><a href="{FIGHT_URL}"><b>▶ FIGHT</b></a></p>\n'
+        action = (
+            f'<p><a href="{FIGHT_URL}"><b>▶ FIGHT</b></a><br>\n'
+            "<sub>Press FIGHT, then the green button. "
+            "Reload this page in about 1 minute to see the damage!</sub></p>\n"
+        )
     else:
         headline = f'{state["name"]} was defeated! 🎉'
         action = "<p><sub>A new enemy appears tomorrow at 6:00 (JST).</sub></p>\n"

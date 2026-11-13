@@ -25,6 +25,8 @@ FIGHT_URL = (
     "?title=fight&body=Press+the+green+button+to+attack%21"
 )
 
+MAX_LOGS = 4  # number of damage log lines to show
+
 WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
  
 # rarity: 1=よくでる 2=ときどき 3=レア
@@ -124,7 +126,7 @@ def spawn(today: date) -> dict:
         "lv": lv,
         "hp": hp,
         "max_hp": hp,
-        "log": "",
+        "logs": [],
     }
  
 def fight(state: dict, player: str) -> None:
@@ -145,7 +147,8 @@ def fight(state: dict, player: str) -> None:
         msg = "💥 Critical hit! " + msg
     if state["hp"] == 0:
         msg += f" {state['name']} was defeated by {player}!"
-    state["log"] = msg
+    logs = state.get("logs", [])
+    state["logs"] = ([msg] + logs)[:MAX_LOGS]  # newest first
 
 
 def hp_bar(now: int, max_hp: int, width: int = 10) -> str:
@@ -176,7 +179,9 @@ def render(state: dict) -> str:
     if alive and state.get("speech"):
         speech = f'<p>💬 <i>{state["name"]}: "{state["speech"]}"</i></p>\n'
  
-    log = f'<p><sub>{state["log"]}</sub></p>\n' if state.get("log") else ""
+    log = ""
+    if state.get("logs"):
+        log = "<p><sub>" + "<br>\n".join(state["logs"]) + "</sub></p>\n"
 
     return (
         '<div align="center">\n'
@@ -215,6 +220,9 @@ def main() -> None:
     if args.fight:
         if STATE.exists():
             state = json.loads(STATE.read_text(encoding="utf-8"))
+            # old format had a single "log" string
+            old = state.pop("log", "")
+            state.setdefault("logs", [old] if old else [])
         else:
             state = spawn(today)
         fight(state, args.fight)
@@ -237,7 +245,7 @@ def main() -> None:
     STATE.write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
  
     if args.fight:
-        print(f"{args.fight}: {state['log']}")
+        print(f"{args.fight}: {state['logs'][0] if state['logs'] else ''}")
     else:
         print(f"{today}: README updated")
  

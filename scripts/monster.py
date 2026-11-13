@@ -11,6 +11,7 @@ import re
 import sys
 from datetime import date, datetime
 from pathlib import Path
+from urllib.parse import quote
 from zoneinfo import ZoneInfo
  
 ROOT = Path(__file__).resolve().parent.parent
@@ -20,9 +21,17 @@ START = "<!-- MONSTER:START -->"
 END = "<!-- MONSTER:END -->"
  
 REPO = "hamutaro-46/hamutaro-46"
+ISSUE_BODY = (
+    "⚠️ **Notice**\n"
+    "Your GitHub username will be shown in the damage log on the profile "
+    "and will remain on this issue.\n"
+
+
+    "If that's OK, press the green button to attack!"
+)
 FIGHT_URL = (
     f"https://github.com/{REPO}/issues/new"
-    "?title=fight&body=Press+the+green+button+to+attack%21"
+    f"?title=fight&body={quote(ISSUE_BODY)}"
 )
 
 MAX_LOGS = 4  # number of damage log lines to show

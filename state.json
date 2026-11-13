@@ -1,13 +1,13 @@
 {
-  "date": "2026-11-12",
-  "name": "Memory Leak Zombie",
-  "icon": "🧟",
-  "rarity": 2,
-  "type": "Poison",
+  "date": "2026-11-13",
+  "name": "Out-of-Coffee Goblin",
+  "icon": "☕",
+  "rarity": 1,
+  "type": "Sleepy",
   "title": "",
   "speech": "",
-  "lv": 12,
-  "hp": 55,
-  "max_hp": 138,
-  "log": "💥 Critical hit! hamutaro-46 dealt 46 damage!"
+  "lv": 7,
+  "hp": 92,
+  "max_hp": 92,
+  "log": ""
 }

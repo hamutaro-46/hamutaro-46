@@ -26,18 +26,6 @@ hamutaro-46 dealt 15 damage!</sub></p>
 
 <!-- STATS:START -->
 <div align="center">
-<pre>
-┌─ STATUS ─────────────────────────┐
-│ NAME     hamutaro-46             │
-│ SINCE    2025                    │
-│ COMMITS  26      PRs    0        │
-│ REPOS    2       STARS  0        │
-├─ LANGUAGES ──────────────────────┤
-│ TypeScript  █████░░░░░  52.8%    │
-│ Python      ████░░░░░░  42.3%    │
-│ CSS         █░░░░░░░░░   2.5%    │
-│ JavaScript  █░░░░░░░░░   2.4%    │
-└──────────────────────────────────┘
-</pre>
+<img src="assets/status.svg" alt="STATUS window" width="720">
 </div>
 <!-- STATS:END -->

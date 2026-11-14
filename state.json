@@ -1,13 +1,13 @@
 {
-  "date": "2026-11-13",
-  "name": "Out-of-Coffee Goblin",
-  "icon": "☕",
+  "date": "2026-11-14",
+  "name": "Bug Slime",
+  "icon": "🟢",
   "rarity": 1,
-  "type": "Sleepy",
+  "type": "Water",
   "title": "",
   "speech": "",
-  "lv": 7,
-  "hp": 92,
-  "max_hp": 92,
-  "log": ""
+  "lv": 10,
+  "hp": 126,
+  "max_hp": 126,
+  "logs": []
 }

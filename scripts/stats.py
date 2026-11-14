@@ -22,7 +22,7 @@ SVG = ROOT / "assets" / "status.svg"
 START = "<!-- STATS:START -->"
 END = "<!-- STATS:END -->"
 
-TOP_LANGS = 4  # number of languages to show
+TOP_LANGS = 5  # number of languages to show
 SHORT_NAMES = {"Jupyter Notebook": "Jupyter", "Dockerfile": "Docker"}
 
 # window style (like an RPG menu)
@@ -105,8 +105,9 @@ def render_svg(s: dict) -> str:
     x, y, w, h = 6, 6, 330, H - 12
     parts.append(window(x, y, w, h))
     parts.append(text(x + 24, y + 42, USER, size=22))
+    parts.append(text(x + w - 24, y + 42, f'Since {s["since"]}', "end", size=16))
     rows = [
-        ("Since", s["since"]),
+        ("Commits", f'{s["commits"]:,}'),
         ("Repositories", f'{s["repos"]:,}'),
         ("Stars", f'{s["stars"]:,}'),
         ("Pull requests", f'{s["prs"]:,}'),
@@ -115,23 +116,18 @@ def render_svg(s: dict) -> str:
     for i, (label, value) in enumerate(rows):
         parts.append(label_value(x, w, y + 90 + i * 40, label, value))
 
-    # right top: commits (like the "Gold" window)
-    x, y, w, h = 354, 6, 360, 60
+    # right: languages (like the "Equipment" window)
+    x, y, w, h = 354, 6, 360, H - 12
     parts.append(window(x, y, w, h))
-    parts.append(label_value(x, w, y + 38, "Commits", f'{s["commits"]:,}'))
-
-    # right bottom: languages (like the "Equipment" window)
-    x, y, w, h = 354, 82, 360, H - 88
-    parts.append(window(x, y, w, h))
-    parts.append(text(x + 24, y + 40, "Languages", size=22))
+    parts.append(text(x + 24, y + 42, "Languages", size=22))
 
     total = sum(s["langs"].values())
     top = sorted(s["langs"].items(), key=lambda kv: -kv[1])[:TOP_LANGS]
     if not top:
-        parts.append(text(x + 24, y + 84, "(no data yet)"))
+        parts.append(text(x + 24, y + 90, "(no data yet)"))
     bar_x, bar_w = x + 160, 110
     for i, (name, size) in enumerate(top):
-        ry = y + 82 + i * 36
+        ry = y + 90 + i * 40
         ratio = size / total
         pct = f"{ratio * 100:.0f}%" if ratio >= 0.01 else "<1%"
         parts.append(text(x + 24, ry, SHORT_NAMES.get(name, name)[:11], size=18))

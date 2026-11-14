@@ -7,12 +7,12 @@
   "title": "",
   "speech": "",
   "lv": 10,
-  "hp": 15,
+  "hp": 0,
   "max_hp": 126,
   "logs": [
+    "hamutaro-46 dealt 22 damage! Bug Slime was defeated by hamutaro-46!",
     "hamutaro-46 dealt 16 damage!",
     "hamutaro-46 dealt 25 damage!",
-    "hamutaro-46 dealt 15 damage!",
-    "💥 Critical hit! hamutaro-46 dealt 36 damage!"
+    "hamutaro-46 dealt 15 damage!"
   ]
 }

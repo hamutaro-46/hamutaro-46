@@ -24,9 +24,5 @@ hamutaro-46 dealt 15 damage!</sub></p>
 
 </div>
 
-<table>
-
 <!-- STATS:START -->
 <!-- STATS:END -->
-
-</table>

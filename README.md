@@ -23,3 +23,10 @@ hamutaro-46 dealt 15 damage!</sub></p>
 <sub>Thanks for playing! 🎮</sub>
 
 </div>
+
+<table>
+
+<!-- STATS:START -->
+<!-- STATS:END -->
+
+</table>

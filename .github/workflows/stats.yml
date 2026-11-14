@@ -1,0 +1,36 @@
+name: status window
+
+on:
+  schedule:
+    - cron: "30 21 * * *"   # 日本時間 まいあさ 6:30
+  workflow_dispatch:         # Actions タブから 手動でも 実行できる
+
+permissions:
+  contents: write
+
+jobs:
+  stats:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: ステータス を あつめて README に かく
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for i in 1 2 3 4 5; do
+            git fetch origin main && git reset --hard origin/main
+            python scripts/stats.py
+            git add README.md
+            git diff --cached --quiet && exit 0
+            git commit -m "📊 ステータス を こうしん"
+            git push origin main && exit 0
+            sleep $((RANDOM % 5 + 1))
+          done
+          exit 1

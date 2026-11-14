@@ -27,7 +27,7 @@ jobs:
           for i in 1 2 3 4 5; do
             git fetch origin main && git reset --hard origin/main
             python scripts/stats.py
-            git add README.md
+            git add README.md assets/status.svg
             git diff --cached --quiet && exit 0
             git commit -m "📊 ステータス を こうしん"
             git push origin main && exit 0

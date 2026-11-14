@@ -1,6 +1,7 @@
-"""Write a game-style STATUS window (commits, languages...) into README.md.
+"""Draw an RPG-menu style STATUS window (commits, languages...) as an SVG
+and show it in README.md.
 
-Run on GitHub Actions (needs GITHUB_TOKEN). Preview without changing README:
+Run on GitHub Actions (needs GITHUB_TOKEN). Preview without changing files:
     GITHUB_TOKEN=xxx python3 scripts/stats.py --print
 """
 
@@ -9,20 +10,29 @@ import json
 import os
 import re
 import sys
-import unicodedata
 from pathlib import Path
 from urllib.parse import quote
 from urllib.request import Request, urlopen
+from xml.sax.saxutils import escape
 
 USER = "hamutaro-46"
-README = Path(__file__).resolve().parent.parent / "README.md"
+ROOT = Path(__file__).resolve().parent.parent
+README = ROOT / "README.md"
+SVG = ROOT / "assets" / "status.svg"
 START = "<!-- STATS:START -->"
 END = "<!-- STATS:END -->"
 
-TOP_LANGS = 5   # number of languages to show
-WIDTH = 34      # inner width of the window
-BAR = 10        # length of the language bar
+TOP_LANGS = 4  # number of languages to show
+SHORT_NAMES = {"Jupyter Notebook": "Jupyter", "Dockerfile": "Docker"}
 
+# window style (like an RPG menu)
+BG = "#111111"
+LINE = "#ffffff"
+TEXT = "#ffffff"
+FONT = "'DotGothic16', 'PixelMplus10', 'Courier New', monospace"
+
+
+# ---------- collect data from GitHub ----------
 
 def api(path: str) -> dict | list:
     req = Request(f"https://api.github.com{path}")
@@ -66,59 +76,107 @@ def collect() -> dict:
     }
 
 
-def width(text: str) -> int:
-    """Display width (full-width characters count as 2)."""
-    return sum(2 if unicodedata.east_asian_width(c) in "WF" else 1 for c in text)
+# ---------- draw SVG ----------
+
+def window(x: int, y: int, w: int, h: int) -> str:
+    return (
+        f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="10" '
+        f'fill="{BG}" stroke="{LINE}" stroke-width="4"/>'
+    )
 
 
-def row(text: str = "") -> str:
-    return "│ " + text + " " * (WIDTH - 2 - width(text)) + " │"
+def text(x: int, y: int, s: str, anchor: str = "start", size: int = 20) -> str:
+    return (
+        f'<text x="{x}" y="{y}" font-size="{size}" text-anchor="{anchor}">'
+        f"{escape(s)}</text>"
+    )
 
 
-def title(label: str, left: str = "├", right: str = "┤") -> str:
-    head = f"─ {label} "
-    return left + head + "─" * (WIDTH - len(head)) + right
+def label_value(x: int, w: int, y: int, label: str, value: str) -> str:
+    """Label on the left, value on the right (like 'Level ... 2')."""
+    return text(x + 24, y, label) + text(x + w - 24, y, value, "end")
 
 
-def render(s: dict) -> str:
-    lines = [
-        title("STATUS", "┌", "┐"),
-        row(f"NAME     {USER}"),
-        row(f"SINCE    {s['since']}"),
-        row(f"COMMITS  {s['commits']:<8}PRs    {s['prs']}"),
-        row(f"REPOS    {s['repos']:<8}STARS  {s['stars']}"),
-        title("LANGUAGES"),
+def render_svg(s: dict) -> str:
+    W, H = 720, 300
+    parts = []
+
+    # left: character status
+    x, y, w, h = 6, 6, 330, H - 12
+    parts.append(window(x, y, w, h))
+    parts.append(text(x + 24, y + 42, USER, size=22))
+    rows = [
+        ("Since", s["since"]),
+        ("Repositories", f'{s["repos"]:,}'),
+        ("Stars", f'{s["stars"]:,}'),
+        ("Pull requests", f'{s["prs"]:,}'),
+        ("Languages", f'{len(s["langs"]):,}'),
     ]
+    for i, (label, value) in enumerate(rows):
+        parts.append(label_value(x, w, y + 90 + i * 40, label, value))
+
+    # right top: commits (like the "Gold" window)
+    x, y, w, h = 354, 6, 360, 60
+    parts.append(window(x, y, w, h))
+    parts.append(label_value(x, w, y + 38, "Commits", f'{s["commits"]:,}'))
+
+    # right bottom: languages (like the "Equipment" window)
+    x, y, w, h = 354, 82, 360, H - 88
+    parts.append(window(x, y, w, h))
+    parts.append(text(x + 24, y + 40, "Languages", size=22))
 
     total = sum(s["langs"].values())
-    top = sorted(s["langs"].items(), key=lambda x: -x[1])[:TOP_LANGS]
+    top = sorted(s["langs"].items(), key=lambda kv: -kv[1])[:TOP_LANGS]
     if not top:
-        lines.append(row("(no data yet)"))
-    for name, size in top:
-        pct = 100 * size / total
-        filled = max(1, round(BAR * size / total))
-        bar = "█" * filled + "░" * (BAR - filled)
-        lines.append(row(f"{name[:11]:<11} {bar} {pct:5.1f}%"))
+        parts.append(text(x + 24, y + 84, "(no data yet)"))
+    bar_x, bar_w = x + 160, 110
+    for i, (name, size) in enumerate(top):
+        ry = y + 82 + i * 36
+        ratio = size / total
+        pct = f"{ratio * 100:.0f}%" if ratio >= 0.01 else "<1%"
+        parts.append(text(x + 24, ry, SHORT_NAMES.get(name, name)[:11], size=18))
+        parts.append(
+            f'<rect x="{bar_x}" y="{ry - 13}" width="{bar_w}" height="12" '
+            f'fill="none" stroke="{LINE}" stroke-width="2"/>'
+        )
+        parts.append(
+            f'<rect x="{bar_x}" y="{ry - 13}" width="{max(2, round(bar_w * ratio))}" '
+            f'height="12" fill="{LINE}"/>'
+        )
+        parts.append(text(x + w - 24, ry, pct, "end", size=18))
 
-    lines.append("└" + "─" * WIDTH + "┘")
-    return '<div align="center">\n<pre>\n' + "\n".join(lines) + "\n</pre>\n</div>"
+    return (
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" '
+        f'viewBox="0 0 {W} {H}">\n'
+        f'<g font-family="{FONT}" fill="{TEXT}">\n'
+        + "\n".join(parts)
+        + "\n</g>\n</svg>\n"
+    )
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--print", action="store_true", help="only print, don't change README")
+    parser.add_argument("--print", action="store_true", help="only print the SVG, don't change files")
     args = parser.parse_args()
 
-    block = render(collect())
+    svg = render_svg(collect())
     if args.print:
-        print(block)
+        print(svg)
         return
 
-    text = README.read_text(encoding="utf-8")
+    SVG.parent.mkdir(exist_ok=True)
+    SVG.write_text(svg, encoding="utf-8")
+
+    block = (
+        '<div align="center">\n'
+        '<img src="assets/status.svg" alt="STATUS window" width="720">\n'
+        "</div>"
+    )
+    text_ = README.read_text(encoding="utf-8")
     pattern = re.compile(re.escape(START) + r".*?" + re.escape(END), re.DOTALL)
-    if not pattern.search(text):
+    if not pattern.search(text_):
         sys.exit(f"{START} and {END} were not found in README.md")
-    README.write_text(pattern.sub(lambda _: f"{START}\n{block}\n{END}", text), encoding="utf-8")
+    README.write_text(pattern.sub(lambda _: f"{START}\n{block}\n{END}", text_), encoding="utf-8")
     print("STATUS window updated")
 
 

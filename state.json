@@ -1,18 +1,13 @@
 {
-  "date": "2026-11-14",
-  "name": "Bug Slime",
-  "icon": "🟢",
+  "date": "2026-11-15",
+  "name": "Out-of-Coffee Goblin",
+  "icon": "☕",
   "rarity": 1,
-  "type": "Water",
+  "type": "Sleepy",
   "title": "",
   "speech": "",
-  "lv": 10,
-  "hp": 0,
-  "max_hp": 126,
-  "logs": [
-    "hamutaro-46 dealt 22 damage! Bug Slime was defeated by hamutaro-46!",
-    "hamutaro-46 dealt 16 damage!",
-    "hamutaro-46 dealt 25 damage!",
-    "hamutaro-46 dealt 15 damage!"
-  ]
+  "lv": 9,
+  "hp": 81,
+  "max_hp": 81,
+  "logs": []
 }

@@ -23,6 +23,6 @@
 
 <!-- STATS:START -->
 <div align="center">
-<img src="assets/status.svg" alt="STATUS window" width="720">
+<img src="assets/status.svg" alt="STATUS window" width="760">
 </div>
 <!-- STATS:END -->

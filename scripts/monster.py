@@ -6,6 +6,7 @@
  
 import argparse
 import random
+import hashlib
 import json
 import re
 import sys
@@ -509,18 +510,17 @@ def render_svg(state: dict) -> str:
     )
 
 
-def render(state: dict) -> str:
-    """HTML for README: the battle screen image + FIGHT link + logs."""
+def render(state: dict, svg: str) -> str:
+    """HTML for README: the battle screen image (= FIGHT link) + logs."""
     alive = state["hp"] > 0
-    # ?v=... makes GitHub fetch the new image after each attack
-    version = f'{state["date"]}-{state["hp"]}'
+    # ?v=... changes whenever the picture changes, so GitHub shows the new one
+    version = hashlib.sha1(svg.encode("utf-8")).hexdigest()[:10]
     img = f'<img src="assets/battle.svg?v={version}" alt="Today\'s enemy: {state["name"]}" width="800">'
 
     if alive:
         top = f'<a href="{FIGHT_URL}">{img}</a>\n'
         action = (
-            f'<p><a href="{FIGHT_URL}"><b>▶ FIGHT</b></a><br>\n'
-            "<sub>Press FIGHT (or the picture), then the green button. "
+            "<p><sub>Click the picture to FIGHT, then press the green button. "
             "Reload this page in about 1 minute to see the damage!</sub></p>\n"
         )
     else:
@@ -539,6 +539,8 @@ def main() -> None:
     parser.add_argument("--date", help="YYYY-MM-DD (to preview another day)")
     parser.add_argument("--print", action="store_true", help="only print, don't change files")
     parser.add_argument("--fight", metavar="PLAYER", help="attack the current enemy")
+    parser.add_argument("--refresh", action="store_true",
+                        help="redraw the current enemy without changing HP")
     args = parser.parse_args()
  
     today = (
@@ -547,7 +549,7 @@ def main() -> None:
         else datetime.now(ZoneInfo("Asia/Tokyo")).date()
     )
  
-    if args.fight:
+    if args.fight or args.refresh:
         if STATE.exists():
             state = json.loads(STATE.read_text(encoding="utf-8"))
             # old format had a single "log" string
@@ -555,18 +557,20 @@ def main() -> None:
             state.setdefault("logs", [old] if old else [])
         else:
             state = spawn(today)
-        fight(state, args.fight)
+        if args.fight:
+            fight(state, args.fight)
     else:
         state = spawn(today)
  
-    block = render(state)
+    svg = render_svg(state)
+    block = render(state, svg)
  
     if args.print:
         print(block)
         return
  
     BATTLE_SVG.parent.mkdir(exist_ok=True)
-    BATTLE_SVG.write_text(render_svg(state), encoding="utf-8")
+    BATTLE_SVG.write_text(svg, encoding="utf-8")
 
     text = README.read_text(encoding="utf-8")
     pattern = re.compile(re.escape(START) + r".*?" + re.escape(END), re.DOTALL)

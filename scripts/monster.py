@@ -493,9 +493,8 @@ def render_svg(state: dict) -> str:
     # command window (bottom right)
     p.append(battle_window(558, 318, 220, 120))
     if alive:
-        p.append('<polygon points="584,358 584,382 602,370" fill="#ffffff"/>')
-        p.append(svg_text(614, 379, "FIGHT", 24, bold=True))
-        p.append(svg_text(614, 416, "RUN", 22, "#777788"))
+        p.append('<polygon points="606,366 606,390 624,378" fill="#ffffff"/>')
+        p.append(svg_text(638, 387, "FIGHT", 26, bold=True))
     else:
         p.append(svg_text(668, 372, "VICTORY!", 22, TITLE_COLOR, "middle", True))
         p.append(svg_text(668, 404, "next: 6:00 JST", 14, "#9999aa", "middle"))

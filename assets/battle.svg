@@ -159,8 +159,7 @@
 <text x="48" y="420" font-size="14" fill="#b39dfa" text-anchor="start">TYPE: DARK  RARITY: ★☆☆☆☆</text>
 <polygon points="508,410 524,410 516,422" fill="#ffffff"/>
 <rect x="558" y="318" width="220" height="120" rx="8" fill="#000000" stroke="#ffffff" stroke-width="4"/><rect x="565" y="325" width="206" height="106" rx="5" fill="none" stroke="#555566" stroke-width="1.5"/>
-<polygon points="584,358 584,382 602,370" fill="#ffffff"/>
-<text x="614" y="379" font-size="24" fill="#ffffff" text-anchor="start" font-weight="bold">FIGHT</text>
-<text x="614" y="416" font-size="22" fill="#777788" text-anchor="start">RUN</text>
+<polygon points="606,366 606,390 624,378" fill="#ffffff"/>
+<text x="638" y="387" font-size="26" fill="#ffffff" text-anchor="start" font-weight="bold">FIGHT</text>
 </g>
 </svg>

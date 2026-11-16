@@ -1,15 +1,13 @@
 {
-  "date": "2026-11-15",
-  "name": "Out-of-Coffee Goblin",
-  "icon": "☕",
+  "date": "2026-11-16",
+  "name": "Semicolon Spider",
+  "icon": "🕷️",
   "rarity": 1,
-  "type": "Sleepy",
+  "type": "Dark",
   "title": "",
   "speech": "",
   "lv": 9,
-  "hp": 73,
-  "max_hp": 81,
-  "logs": [
-    "harumaki1220 dealt 8 damage!"
-  ]
+  "hp": 87,
+  "max_hp": 87,
+  "logs": []
 }

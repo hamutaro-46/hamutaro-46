@@ -23,11 +23,6 @@ jobs:
         with:
           python-version: "3.12"
  
-      - name: こうげき
-        env:
-          PLAYER: ${{ github.event.issue.user.login }}
-        run: python scripts/monster.py --fight "$PLAYER"
- 
       - name: README を コミット
         env:
           PLAYER: ${{ github.event.issue.user.login }}
@@ -37,7 +32,7 @@ jobs:
           for i in 1 2 3 4 5; do
             git fetch origin main && git reset --hard origin/main
             python scripts/monster.py --fight "$PLAYER"
-            git add README.md state.json
+            git add README.md state.json assets/battle.svg
             git diff --cached --quiet && exit 0
             git commit -m "⚔️ $PLAYER attacked"
             git push origin main && exit 0

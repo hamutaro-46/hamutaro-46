@@ -498,7 +498,7 @@ def render_svg(state: dict) -> str:
         p.append(svg_text(638, 387, "FIGHT", 26, bold=True))
     else:
         p.append(svg_text(668, 372, "VICTORY!", 22, TITLE_COLOR, "middle", True))
-        p.append(svg_text(668, 404, "next: 6:00 JST", 14, "#9999aa", "middle"))
+        p.append(svg_text(668, 404, "next: Monday", 14, "#9999aa", "middle"))
 
     return (
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{SW}" height="{SH}" '
@@ -515,7 +515,7 @@ def render(state: dict, svg: str) -> str:
     alive = state["hp"] > 0
     # ?v=... changes whenever the picture changes, so GitHub shows the new one
     version = hashlib.sha1(svg.encode("utf-8")).hexdigest()[:10]
-    img = f'<img src="assets/battle.svg?v={version}" alt="Today\'s enemy: {state["name"]}" width="800">'
+    img = f'<img src="assets/battle.svg?v={version}" alt="This week\'s enemy: {state["name"]}" width="800">'
 
     if alive:
         top = f'<a href="{FIGHT_URL}">{img}</a>\n'
@@ -525,7 +525,7 @@ def render(state: dict, svg: str) -> str:
         )
     else:
         top = img + "\n"
-        action = "<p><sub>A new enemy appears tomorrow at 6:00 (JST).</sub></p>\n"
+        action = "<p><sub>A new enemy appears next Monday (JST).</sub></p>\n"
 
     log = ""
     if state.get("logs"):

@@ -1,13 +1,13 @@
 {
-  "date": "2026-11-18",
-  "name": "Semicolon Spider",
-  "icon": "🕷️",
+  "date": "2026-11-23",
+  "name": "Bug Slime",
+  "icon": "🟢",
   "rarity": 1,
-  "type": "Dark",
+  "type": "Water",
   "title": "",
   "speech": "",
-  "lv": 4,
-  "hp": 49,
-  "max_hp": 49,
+  "lv": 8,
+  "hp": 104,
+  "max_hp": 104,
   "logs": []
 }
